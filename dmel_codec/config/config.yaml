@@ -1,0 +1,18 @@
+defaults:
+  - data: libritts_24k
+  - codec: ours_m
+  - experiment: smoke
+  - _self_
+
+project: icassp-2027-codec
+seed: 2026
+init_from: ${oc.select:experiment.init_from,null}
+resume_from: null
+
+hydra:
+  run:
+    dir: ${oc.env:DMEL_RUN_ROOT,./runs}/hydra/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: ${oc.env:DMEL_RUN_ROOT,./runs}/hydra/multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: false

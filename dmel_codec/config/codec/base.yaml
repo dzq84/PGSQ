@@ -1,0 +1,96 @@
+name: base
+sample_rate: 24000
+hop_length: 256
+num_mels: 100
+n_fft: 1024
+win_length: 1024
+latent_channels: 700
+num_groups: 10
+token_frame_rate: 23.4375
+
+model:
+  _target_: dmel_codec.models.codec_lit_modules.VQGAN
+  sampling_rate: ${codec.sample_rate}
+  weight_adv: 0.2
+  weight_mel: 1.0
+  freeze_encoder: false
+  dmel_groups: ${codec.num_groups}
+  dtype: float32
+  accumulate_grad: 1
+  decoder_input_policy: zeros
+  decoder_noise_seed: ${seed}
+  mel_bin_permutation: null
+  pre_quantized_projection: null
+  quantized_projection: null
+
+  encoder:
+    _target_: dmel_codec.models.modules.wavenet.WaveNet
+    input_channels: 10
+    residual_channels: 70
+    residual_layers: 20
+    dilation_cycle: 4
+
+  quantizer:
+    _target_: dmel_codec.models.modules.downsample_fsq.DownsampleFiniteScalarQuantize
+    input_dim: ${codec.latent_channels}
+    n_codebooks: 1
+    n_groups: ${codec.num_groups}
+    levels: [7, 5, 5]
+    is_dmel: true
+    downsample_factor: [2, 2]
+
+  decoder:
+    _target_: dmel_codec.models.modules.wavenet.WaveNet
+    input_channels: ${codec.latent_channels}
+    output_channels: ${codec.num_mels}
+    residual_channels: ${codec.latent_channels}
+    residual_layers: 20
+    dilation_cycle: 4
+    condition_channels: ${codec.latent_channels}
+
+  discriminator:
+    _target_: dmel_codec.models.modules.discriminator.Discriminator
+
+  vocoder:
+    _target_: dmel_codec.models.modules.bigvgan.bigvgan.BigVGAN
+    ckpt_path: ${oc.env:BIGVGAN_CKPT,null}
+    h_path: ${oc.env:BIGVGAN_CONFIG,null}
+    use_cuda_kernel: false
+
+  encode_mel_transform:
+    _target_: dmel_codec.utils.spectrogram.LogMelSpectrogram
+    sample_rate: ${codec.sample_rate}
+    n_fft: ${codec.n_fft}
+    hop_length: ${codec.hop_length}
+    win_length: ${codec.win_length}
+    n_mels: ${codec.num_mels}
+    f_min: 0
+    f_max: 12000
+
+  gt_mel_transform:
+    _target_: dmel_codec.utils.spectrogram.LogMelSpectrogram
+    sample_rate: ${codec.sample_rate}
+    n_fft: ${codec.n_fft}
+    hop_length: ${codec.hop_length}
+    win_length: ${codec.win_length}
+    n_mels: ${codec.num_mels}
+    f_min: 0
+    f_max: 12000
+
+  optimizer:
+    _target_: torch.optim.AdamW
+    _partial_: true
+    lr: 0.0001
+    betas: [0.8, 0.99]
+    eps: 0.00001
+    weight_decay: 0.01
+
+  lr_scheduler:
+    _target_: torch.optim.lr_scheduler.LambdaLR
+    _partial_: true
+    lr_lambda:
+      _target_: dmel_codec.utils.schedule.get_cosine_schedule_with_warmup_lr_lambda
+      _partial_: true
+      num_warmup_steps: 100
+      num_training_steps: ${experiment.trainer.max_steps}
+      final_lr_ratio: 0.05

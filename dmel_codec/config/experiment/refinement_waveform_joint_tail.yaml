@@ -1,0 +1,14 @@
+# @package _global_
+
+defaults:
+  - refinement_base
+  - _self_
+
+experiment:
+  name: refinement_waveform_joint_vocoder_tail
+
+codec:
+  system_name: Ours-M decoder refinement (joint vocoder tail)
+  model:
+    refinement_mode: waveform_joint_vocoder_tail
+    waveform_loss_weight: 0.1

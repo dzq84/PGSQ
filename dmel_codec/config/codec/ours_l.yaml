@@ -1,0 +1,8 @@
+defaults:
+  - base
+  - _self_
+
+name: ours_l
+model:
+  quantizer:
+    levels: [5, 5]

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Parallel Grouped-FSQ Spectral Codec | Audio Demo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">ICASSP 2027 audio demo</p>
+      <h1>Parallel Grouped-FSQ Spectral Codec</h1>
+    </div>
+    <div class="protocol"><strong>LibriTTS test-clean</strong><span>24 kHz speech</span></div>
+  </header>
+  <main>
+    <section class="summary-band" aria-label="Primary result">
+      <div><strong>1.746 kbps</strong><span>Ours-M-FT primary point</span></div>
+      <div><strong>23.44 Hz</strong><span>flat parallel frames</span></div>
+      <div><strong>22.4% lower rate</strong><span>than DAC q=3</span></div>
+    </section>
+    <section class="controls" aria-label="Demo controls">
+      <div id="group-tabs" class="segments" role="tablist" aria-label="Comparison set"></div>
+      <label class="cut-control">Utterance<select id="cut-select"></select></label>
+    </section>
+    <section class="utterance" aria-live="polite">
+      <div><span id="cut-meta"></span><h2 id="cut-id"></h2></div>
+      <p id="transcript"></p>
+    </section>
+    <section class="results" aria-label="Audio comparisons">
+      <div class="metric-head" aria-hidden="true">
+        <span>System</span><span>Rate</span><span>WER</span><span>ViSQOL</span><span>PESQ</span><span>Spk</span>
+      </div>
+      <div id="system-list"></div>
+    </section>
+  </main>
+  <footer><span>Corpus metrics, not per-sample scores.</span></footer>
+  <script src="demo-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

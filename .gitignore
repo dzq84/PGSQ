@@ -1,0 +1,29 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Large / generated data and run outputs
+/data/
+/results/
+/checkpoints/
+ckpt/
+checkpoints/
+outputs/
+tb_logs/
+*.npy
+*.gz
+*.filelist
+filelists
+*.lab
+
+# Audio: ignore generated .wav files, but keep the demo page audio.
+*.wav
+!docs/audio/**/*.wav
+
+.conda/
+.vscode/
+.idea/

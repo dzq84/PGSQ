@@ -1,0 +1,20 @@
+# @package _global_
+
+defaults:
+  - pilot_clean100
+  - _self_
+
+experiment:
+  name: pilot_clean100_repair2_100k
+  run_dir: ${oc.env:DMEL_RUN_ROOT,./runs}/pilot_clean100_repair2_100k/${codec.name}/seed_${seed}
+  trainer:
+    max_steps: 100000
+
+codec:
+  model:
+    optimizer:
+      lr: 0.0001
+    lr_scheduler:
+      lr_lambda:
+        num_training_steps: ${experiment.trainer.max_steps}
+        final_lr_ratio: 0.1

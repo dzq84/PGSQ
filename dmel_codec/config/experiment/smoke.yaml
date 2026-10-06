@@ -1,0 +1,65 @@
+# @package _global_
+
+experiment:
+  name: smoke
+  require_vocoder: false
+  run_dir: ${oc.env:DMEL_RUN_ROOT,./runs}/smoke
+  trainer:
+    _target_: lightning.pytorch.Trainer
+    accelerator: cpu
+    devices: 1
+    precision: 32-true
+    max_steps: 2
+    max_epochs: 1
+    limit_train_batches: 2
+    limit_val_batches: 2
+    num_sanity_val_steps: 0
+    val_check_interval: 1
+    log_every_n_steps: 1
+    enable_checkpointing: false
+    enable_model_summary: false
+  callbacks: {}
+  logger: false
+
+codec:
+  sample_rate: 24000
+  hop_length: 256
+  num_mels: 8
+  latent_channels: 16
+  num_groups: 2
+  model:
+    dmel_groups: 2
+    weight_adv: 0.0
+    encoder:
+      input_channels: 4
+      residual_channels: 8
+      residual_layers: 2
+      dilation_cycle: 2
+    quantizer:
+      input_dim: 16
+      n_groups: 2
+      levels: [3, 3]
+      downsample_factor: [2, 2]
+    decoder:
+      input_channels: 16
+      output_channels: 8
+      residual_channels: 16
+      residual_layers: 2
+      dilation_cycle: 2
+      condition_channels: 16
+    discriminator: null
+    vocoder: null
+    encode_mel_transform:
+      n_mels: 8
+    gt_mel_transform:
+      n_mels: 8
+
+data:
+  module:
+    train_max_durations: 3.0
+    val_max_durations: 3.0
+    test_max_durations: 3.0
+    train_num_workers: 0
+    val_num_workers: 0
+    test_num_workers: 0
+    pin_memory: false

@@ -1,0 +1,25 @@
+# @package _global_
+
+defaults:
+  - refinement_waveform_vocoder_gan
+  - _self_
+
+experiment:
+  name: refinement_waveform_vocoder_full_only_gan_100k
+  trainer:
+    max_steps: 100000
+    val_check_interval: 2000
+
+data:
+  module:
+    train_crop_seed: ${seed}
+
+codec:
+  system_name: Ours-M+ (frozen codec + full vocoder + waveform GAN)
+  model:
+    refinement_mode: waveform_vocoder_full_only_gan
+    vocoder_lr_scale: 0.5
+    lr_scheduler:
+      lr_lambda:
+        num_warmup_steps: 1000
+        num_training_steps: ${experiment.trainer.max_steps}

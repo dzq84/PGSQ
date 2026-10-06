@@ -1,0 +1,36 @@
+# @package _global_
+
+defaults:
+  - pilot_clean100_repair2_100k
+  - _self_
+
+experiment:
+  name: ablation_joint_fullband
+  run_dir: ${oc.env:DMEL_RUN_ROOT,./runs}/ablations/joint_fullband/${codec.name}/seed_${seed}
+
+codec:
+  name: ours_m_joint_fullband
+  system_name: Ours-M joint full-band
+  model:
+    dmel_groups: 0
+    encoder:
+      input_channels: 100
+      output_channels: 700
+      residual_channels: 70
+      residual_layers: 20
+      dilation_cycle: 4
+    quantizer:
+      input_dim: 70
+      n_codebooks: 10
+      n_groups: 1
+      is_dmel: false
+    pre_quantized_projection:
+      _target_: torch.nn.Conv1d
+      in_channels: 700
+      out_channels: 70
+      kernel_size: 1
+    quantized_projection:
+      _target_: torch.nn.Conv1d
+      in_channels: 70
+      out_channels: 700
+      kernel_size: 1

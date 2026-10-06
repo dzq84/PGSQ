@@ -1,0 +1,24 @@
+root: ${oc.env:LIBRITTS_ROOT,/datasets/LibriTTS}
+manifest_dir: ${oc.env:DMEL_RUN_ROOT,./runs}/manifests/libritts24k
+sample_rate: 24000
+train_crop_seconds: 3.0
+
+module:
+  _target_: dmel_codec.dataset.lhotse_tts_dataset.LhotseDataModule
+  stage: fit
+  train_cuts_path: ${data.manifest_dir}/train_codec.jsonl.gz
+  val_cuts_path: ${data.manifest_dir}/dev-clean_eval.jsonl.gz
+  test_cuts_path: ${data.manifest_dir}/test-clean_eval.jsonl.gz
+  train_max_durations: 60.0
+  val_max_durations: 30.0
+  test_max_durations: 30.0
+  train_num_workers: 4
+  val_num_workers: 2
+  test_num_workers: 2
+  pin_memory: true
+  world_size: null
+  rank: null
+  seed: ${seed}
+  train_max_audio_seconds: ${data.train_crop_seconds}
+  train_random_crop: true
+  train_crop_seed: null

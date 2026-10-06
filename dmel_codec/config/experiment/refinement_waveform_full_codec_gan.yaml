@@ -1,0 +1,47 @@
+# @package _global_
+
+defaults:
+  - refinement_base
+  - _self_
+
+experiment:
+  name: refinement_waveform_joint_full_codec_gan
+  trainer:
+    max_steps: 1500
+    val_check_interval: 250
+
+data:
+  module:
+    train_max_durations: 3.0
+
+codec:
+  system_name: Ours-M+ (full codec + vocoder tail + waveform GAN)
+  model:
+    refinement_mode: waveform_joint_full_codec_gan
+    freeze_encoder: false
+    waveform_loss_weight: 0.2
+    validation_waveform_loss_weight: 0.2
+    waveform_discriminator:
+      _target_: dmel_codec.models.modules.waveform_discriminator.WaveformDiscriminator
+      periods: [2, 3, 5, 7, 11]
+      resolutions:
+        - [1024, 120, 600]
+        - [2048, 240, 1200]
+        - [512, 50, 240]
+      channel_multiplier: 1.0
+      use_spectral_norm: false
+    encoder_lr_scale: 0.5
+    vocoder_tail_stages: 2
+    vocoder_lr_scale: 0.1
+    discriminator_lr_scale: 10.0
+    gan_adversarial_weight: 0.1
+    gan_feature_weight: 20.0
+    generator_backward_cudnn_enabled: false
+    gradient_clip_val: 500.0
+    optimizer:
+      lr: 0.000002
+    lr_scheduler:
+      lr_lambda:
+        num_warmup_steps: 50
+        num_training_steps: ${experiment.trainer.max_steps}
+        final_lr_ratio: 0.2

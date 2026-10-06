@@ -1,0 +1,14 @@
+# @package _global_
+
+defaults:
+  - refinement_base
+  - _self_
+
+experiment:
+  name: refinement_waveform_frozen_vocoder
+
+codec:
+  system_name: Ours-M decoder refinement (frozen vocoder)
+  model:
+    refinement_mode: waveform_frozen_vocoder
+    waveform_loss_weight: 0.1

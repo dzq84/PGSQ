@@ -1,0 +1,70 @@
+# @package _global_
+
+experiment:
+  name: refinement_mel_control
+  require_vocoder: true
+  init_from: ${oc.env:OURS_REFINEMENT_INIT,null}
+  run_dir: ${oc.env:DMEL_RUN_ROOT,./runs}/decoder_refinement/${experiment.name}/seed_${seed}
+  trainer:
+    _target_: lightning.pytorch.Trainer
+    accelerator: gpu
+    devices: 1
+    precision: 32-true
+    max_steps: 5000
+    max_epochs: 1000
+    val_check_interval: 1000
+    log_every_n_steps: 20
+    strategy: auto
+    num_sanity_val_steps: 0
+  callbacks:
+    checkpoint:
+      _target_: dmel_codec.utils.callbacks.FinalizedModelCheckpoint
+      dirpath: ${experiment.run_dir}/checkpoints
+      filename: "step-{step:08d}"
+      auto_insert_metric_name: false
+      monitor: val_loss
+      mode: min
+      every_n_epochs: 1
+      save_on_train_epoch_end: false
+      save_top_k: 2
+      save_last: true
+  logger:
+    _target_: lightning.pytorch.loggers.TensorBoardLogger
+    save_dir: ${experiment.run_dir}/logs
+    name: tensorboard
+    log_graph: false
+
+data:
+  module:
+    train_cuts_path: ${oc.env:DMEL_RUN_ROOT,./runs}/manifests/decoder_refinement/clean-460_codec.jsonl.gz
+    val_cuts_path: ${oc.env:DMEL_RUN_ROOT,./runs}/manifests/decoder_refinement/dev-clean-hash64_eval.jsonl.gz
+    train_max_durations: 6.0
+    val_max_durations: 6.0
+    train_num_workers: 2
+    val_num_workers: 2
+
+codec:
+  system_name: Ours-M decoder refinement (mel control)
+  model:
+    _target_: dmel_codec.models.codec_refinement_lit_module.CodecRefinement
+    refinement_mode: mel_control
+    waveform_loss_weight: 0.0
+    validation_waveform_loss_weight: 0.1
+    generator_backward_cudnn_enabled: true
+    stft_resolutions:
+      - [512, 128, 512]
+      - [1024, 256, 1024]
+      - [2048, 512, 2048]
+    vocoder_tail_stages: 2
+    vocoder_lr_scale: 0.1
+    freeze_encoder: true
+    weight_adv: 0.0
+    discriminator: null
+    accumulate_grad: 1
+    optimizer:
+      lr: 0.00001
+    lr_scheduler:
+      lr_lambda:
+        num_warmup_steps: 50
+        num_training_steps: ${experiment.trainer.max_steps}
+        final_lr_ratio: 0.2

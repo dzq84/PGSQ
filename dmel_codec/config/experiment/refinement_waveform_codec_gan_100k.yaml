@@ -1,0 +1,22 @@
+# @package _global_
+
+defaults:
+  - refinement_waveform_codec_gan
+  - _self_
+
+experiment:
+  name: refinement_waveform_full_codec_frozen_vocoder_gan_100k
+  trainer:
+    max_steps: 100000
+    val_check_interval: 2000
+
+data:
+  module:
+    train_crop_seed: ${seed}
+
+codec:
+  model:
+    lr_scheduler:
+      lr_lambda:
+        num_warmup_steps: 1000
+        num_training_steps: ${experiment.trainer.max_steps}

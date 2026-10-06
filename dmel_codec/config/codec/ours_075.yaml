@@ -1,0 +1,9 @@
+defaults:
+  - base
+  - _self_
+
+name: ours_075
+system_name: Ours-0.75
+model:
+  quantizer:
+    levels: [3, 3]

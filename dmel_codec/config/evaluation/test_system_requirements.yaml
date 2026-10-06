@@ -1,0 +1,177 @@
+schema_version: 1
+paper_display:
+  schema_version: 1
+  main_table_roles:
+    - mel_oracle
+    - dmel_same_frontend
+    - dmel_quantization_aware_decoder
+    - dac_q2
+    - dac_q3
+    - ours_075_seed2026
+    - ours_l_seed2026
+    - base_m_seed2026
+    - flagship_m_seed2026
+    - flagship_m_seed2027
+    - flagship_m_seed2028
+  ablation_table_roles:
+    - base_m_seed2026
+    - joint_fullband_seed2026
+    - random_groups_seed2026
+  rate_quality_roles:
+    - dac_q1
+    - dac_q2
+    - dac_q3
+    - dac_q4
+    - ours_075_seed2026
+    - ours_l_seed2026
+    - flagship_m_seed2026
+    - flagship_m_seed2027
+    - flagship_m_seed2028
+    - ours_h_seed2026
+roles:
+  ground_truth:
+    adapter: identity
+    systems: [Ground Truth]
+    variant: identity
+    seed: 2026
+    nominal_bitrate_kbps: 0.0
+    token_frame_rate_hz: 0.0
+    num_parallel_streams: 0
+  mel_oracle:
+    adapter: mel_oracle
+    systems: [Mel Oracle]
+    variant: mel_oracle
+    seed: 2026
+    nominal_bitrate_kbps: 0.0
+    token_frame_rate_hz: 93.75
+    num_parallel_streams: 0
+  dmel_same_frontend:
+    adapter: dmel
+    systems: [dMel-same-front-end (adapted)]
+    variant: dmel
+    seed: 2026
+    nominal_bitrate_kbps: 37.5
+    token_frame_rate_hz: 93.75
+    num_parallel_streams: 100
+    codebook_cardinality: 16
+  dmel_quantization_aware_decoder:
+    adapter: dmel_decoder
+    systems: [dMel-quantization-aware-decoder (adapted)]
+    variant: dmel_decoder
+    seed: 2026
+    nominal_bitrate_kbps: 37.5
+    token_frame_rate_hz: 93.75
+    num_parallel_streams: 100
+    codebook_cardinality: 16
+  dac_q1:
+    adapter: dac
+    systems: [DAC 24 kHz q=1]
+    variant: dac
+    seed: 2026
+    nominal_bitrate_kbps: 0.75
+    token_frame_rate_hz: 75.0
+    num_parallel_streams: 1
+    codebook_cardinality: 1024
+  dac_q2:
+    adapter: dac
+    systems: [DAC 24 kHz q=2]
+    variant: dac
+    seed: 2026
+    nominal_bitrate_kbps: 1.5
+    token_frame_rate_hz: 75.0
+    num_parallel_streams: 2
+    codebook_cardinality: 1024
+  dac_q3:
+    adapter: dac
+    systems: [DAC 24 kHz q=3]
+    variant: dac
+    seed: 2026
+    nominal_bitrate_kbps: 2.25
+    token_frame_rate_hz: 75.0
+    num_parallel_streams: 3
+    codebook_cardinality: 1024
+  dac_q4:
+    adapter: dac
+    systems: [DAC 24 kHz q=4]
+    variant: dac
+    seed: 2026
+    nominal_bitrate_kbps: 3.0
+    token_frame_rate_hz: 75.0
+    num_parallel_streams: 4
+    codebook_cardinality: 1024
+  ours_075_seed2026:
+    adapter: ours
+    systems: [Ours-0.75]
+    variant: ours
+    seed: 2026
+    nominal_bitrate_kbps: 0.7429511719
+    token_frame_rate_hz: 23.4375
+    num_parallel_streams: 10
+    codebook_cardinality: 9
+  ours_l_seed2026:
+    adapter: ours
+    systems: [Ours-L]
+    variant: ours
+    seed: 2026
+    nominal_bitrate_kbps: 1.0884037945
+    token_frame_rate_hz: 23.4375
+    num_parallel_streams: 10
+    codebook_cardinality: 25
+  base_m_seed2026:
+    adapter: ours
+    systems: [Ours-M]
+    variant: ours
+    seed: 2026
+    nominal_bitrate_kbps: 1.7463776043
+    token_frame_rate_hz: 23.4375
+    num_parallel_streams: 10
+    codebook_cardinality: 175
+  flagship_m_seed2026: &flagship_m_seed2026
+    adapter: ours
+    systems: &flagship_systems
+      - Ours-M
+      - Ours-M+ (full codec + frozen vocoder + waveform GAN)
+      - Ours-M+ (frozen codec + full vocoder + waveform GAN)
+      - Ours-M+ (full codec + full vocoder + waveform GAN)
+    variant: ours
+    seed: 2026
+    nominal_bitrate_kbps: 1.7463776043
+    token_frame_rate_hz: 23.4375
+    num_parallel_streams: 10
+    codebook_cardinality: 175
+    consistency_group: flagship_m
+  flagship_m_seed2027:
+    <<: *flagship_m_seed2026
+    systems: *flagship_systems
+    seed: 2027
+  flagship_m_seed2028:
+    <<: *flagship_m_seed2026
+    systems: *flagship_systems
+    seed: 2028
+  ours_h_seed2026:
+    adapter: ours
+    systems: [Ours-H]
+    variant: ours
+    seed: 2026
+    nominal_bitrate_kbps: 2.3357306917
+    token_frame_rate_hz: 23.4375
+    num_parallel_streams: 10
+    codebook_cardinality: 1000
+  joint_fullband_seed2026:
+    adapter: ours
+    systems: [Ours-M joint full-band]
+    variant: ours
+    seed: 2026
+    nominal_bitrate_kbps: 1.7463776043
+    token_frame_rate_hz: 23.4375
+    num_parallel_streams: 10
+    codebook_cardinality: 175
+  random_groups_seed2026:
+    adapter: ours
+    systems: [Ours-M random groups]
+    variant: ours
+    seed: 2026
+    nominal_bitrate_kbps: 1.7463776043
+    token_frame_rate_hz: 23.4375
+    num_parallel_streams: 10
+    codebook_cardinality: 175

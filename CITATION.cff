@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the paper below."
+title: "PGSQ: Parallel Grouped-FSQ Spectral Codec"
+abstract: >-
+  Reference implementation and audio demo for low-rate speech coding with
+  shared mel-band encoding and parallel finite scalar quantization.
+authors:
+  - family-names: Dai
+    given-names: Zheqi
+    affiliation: The Chinese University of Hong Kong
+  - family-names: Wu
+    given-names: Zhiyue
+    affiliation: StepFun
+  - family-names: He
+    given-names: Haolin
+    affiliation: The Chinese University of Hong Kong
+  - family-names: Wu
+    given-names: Chunyat
+    affiliation: The Chinese University of Hong Kong
+  - family-names: Kong
+    given-names: Qiuqiang
+    affiliation: The Chinese University of Hong Kong
+preferred-citation:
+  type: conference-paper
+  title: "Low-Rate Speech Coding with Shared Mel-Band Encoding and Parallel Quantization"
+  authors:
+    - family-names: Dai
+      given-names: Zheqi
+    - family-names: Wu
+      given-names: Zhiyue
+    - family-names: He
+      given-names: Haolin
+    - family-names: Wu
+      given-names: Chunyat
+    - family-names: Kong
+      given-names: Qiuqiang
+  conference:
+    name: "IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)"
+  year: 2027
+  notes: "Submitted"
+license: MIT
+repository-code: "https://github.com/dzq84/PGSQ"
+url: "https://dzq84.github.io/PGSQ/"
